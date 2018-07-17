@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+		<script type="text/javascript">
+			$(function(){
+		    // 页数
+		    var pageNo = 1;
+		    var urlimg="http://xyxc.ctxxhn.com:11811/ ";
+		    // dropload
+		    $('.content').dropload({
+		        scrollArea : window,
+		        loadDownFn : function(me){
+		        	if(pageNo==0){
+		        		me.noData();
+		        		me.resetload();
+		        	}else{
+		                // 拼接HTML
+		                var result = '';
+		                $.ajax({
+		                    type: 'GET',
+		                    url: 'articleAjax',
+		                    data:{pageNo:pageNo},
+		                    dataType: 'json',
+		                    success: function(msg){	
+		                    	if(pageNo != 0){
+		                    		var arrLen = msg.list.length;
+		                            if(arrLen > 0){
+		                            	  var str = '';
+		                            	  var num;
+		                            	  var fx;
+		                              	  for (var i = 0; i < msg.list.length; i++) {
+		                              		  var article = msg.list[i];
+		                              		  num = article.num;
+		                              		  fx = article.fx;
+		                              		  if(num == null){
+		                              			num = 0;
+		                              		  }
+		                              		  if(fx == null){
+		                              			fx = 0;
+		                              		  }
+		                              		  result += ' <div class="lists cont_list"><a href="oauth?id='+article.id 
+
++'" class="flex"><div class="bg" style="background-image: url('+urlimg+article.main_pic+');"></div><div class="words flex"><p>'+article.title+'</p><p>时间：'+article.createTime+'</p><div class="flex share"><span>('+num+')</span><span>('+fx+')</span></div></div></a></div>';
+		                              	  }
+		                            // 如果没有数据
+		                            }else{
+		                                // 锁定
+		                                me.lock();
+		                                // 无数据
+		                                me.noData();
+		                            }
+		                    	}
+		                        setTimeout(function(){
+		                            // 插入数据到页面，放到最后面
+		                            $('.com_list').append(result);
+		                            // 每次数据插入，必须重置
+		                            me.resetload();
+		                            if(msg.pageSize>msg.totalRow){
+		                            	pageNo = 0;
+		                            }else{
+		                            	if(pageNo >= msg.totalPage){
+		                                	pageNo = 0;
+		                                }else{
+		                                	pageNo++;
+		                                }
+		                            }
+		                            
+		                        },500);
+		                    },
+		                    error: function(xhr, type){
+		                        me.resetload();
+		                    }
+		                });
+		        	}
+		        }
+		    });
+		});
+		</script>
+	</body>
+</html>

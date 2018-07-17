@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>分页练习</title>
+		<link rel="stylesheet" href="css/reset.css" />
+		<link rel="stylesheet" href="css/style.css" />
+	</head>
+	<body>
+		<div id="abird"></div>
+		<script type="text/javascript" src="../pagination/js/jquery-3.3.1.js" ></script>
+		<script type="text/javascript">
+			$(function(){
+				var $bird = $("#abird");
+				var pos = $bird.offset();
+				var birdSize = {width:$bird.width(),height:$bird.height()};
+				var speed = 10;//位移10px；
+				var keyRecode = 39;
+				$(document).keydown(function(event){
+					var key = event.keyCode;
+					if(key!=keyCode){
+						$bird.removeClass().addClass(".dir_"+key);
+					}
+					keyRecode = key;
+					switch(key){
+						case 37:
+							pos.left-=speed;
+							break;
+						case 38:
+							pos.top-=speed;
+							break;
+						case 39:
+							pos.left+=speed;
+							if(pos.left>=$(window).width()){
+								
+							}
+							break;
+						case 40:
+							pos.top+=speed;
+							break;
+					}
+					$bird.offset(pos);
+				})
+			})
+		</script>
+	</body>
+</html>
